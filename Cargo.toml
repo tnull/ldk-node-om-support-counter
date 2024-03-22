@@ -1,0 +1,10 @@
+[package]
+name = "ldk-node-om-support-counter"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+#ldk-node = { path = "../ldk-node" }
+ldk-node = { git = "https://github.com/tnull/ldk-node.git", branch = "2024-03-count-om-nodes" }
