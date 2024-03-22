@@ -1,5 +1,6 @@
 use std::io;
 use std::io::prelude::*;
+use std::fs::File;
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -9,6 +10,8 @@ use ldk_node::lightning::ln::msgs::SocketAddress;
 
 use ldk_node::bitcoin::Network;
 use ldk_node::bitcoin::secp256k1::PublicKey;
+
+const PERSIST_PATH: &str = "/tmp/om_support";
 
 fn main() {
 	let mut config = Config::default();
@@ -64,6 +67,11 @@ std::thread::sleep(Duration::from_secs(10));
 		let (num_om_support, num_nodes) = count_node.network_onion_message_support();
 		let share = num_om_support as f32 / num_nodes as f32;
 		println!("Nodes that announce OM support: {}/{} = {}", num_om_support, num_nodes, share);
+
+        if let Ok(mut file) = File::create(PERSIST_PATH) {
+            let buf = format!("Nodes that announce OM support: {}/{} = {}", num_om_support, num_nodes, share);
+            file.write_all(buf.as_bytes());
+        }
 		std::thread::sleep(Duration::from_secs(10));
 	});
 
