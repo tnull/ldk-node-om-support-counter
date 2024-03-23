@@ -98,6 +98,14 @@ fn main() {
 			"02e4971e61a3f55718ae31e2eed19aaf2e32caf3eb5ef5ff03e01aa3ada8907e78".parse().unwrap(),
 			"52.38.27.190:9735".parse().unwrap(),
 		),
+		(
+			"03db10aa09ff04d3568b0621750794063df401e6853c79a21a83e1a3f3b5bfb0c8".parse().unwrap(),
+			"69.59.18.80:9735".parse().unwrap(),
+		),
+		(
+			"027100442c3b79f606f80f322d98d499eefcb060599efc5d4ecb00209c2cb54190".parse().unwrap(),
+			"3.226.165.222:9735".parse().unwrap(),
+		),
 	];
 
 	for (node_id, address) in nodes_to_connect {
