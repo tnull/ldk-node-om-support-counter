@@ -19,8 +19,8 @@ fn main() {
 	config.network = Network::Bitcoin;
 
 	let mut builder = Builder::from_config(config);
-	builder.set_storage_dir_path("/tmp/ldk_node_om_support/".to_string());
-	builder.set_log_level(LogLevel::Trace);
+	builder.set_storage_dir_path("/home/tnull/ldk_node_om_support_storage/".to_string());
+	builder.set_log_level(LogLevel::Debug);
 
 	let node = Arc::new(builder.build().unwrap());
 	node.start().unwrap();
