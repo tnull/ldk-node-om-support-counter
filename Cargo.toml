@@ -8,4 +8,5 @@ edition = "2021"
 [dependencies]
 chrono = "0.4.35"
 #ldk-node = { path = "../ldk-node" }
-ldk-node = { git = "https://github.com/tnull/ldk-node.git", branch = "2024-03-count-om-nodes" }
+ldk-node = { version = "0.3" }
+#ldk-node = { git = "https://github.com/tnull/ldk-node.git", branch = "2024-03-count-om-nodes" }

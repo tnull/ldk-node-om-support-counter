@@ -5,6 +5,7 @@ use std::sync::Arc;
 use std::time::{Duration, SystemTime};
 
 use chrono::{DateTime, Utc};
+use ldk_node::graph::NetworkGraph;
 use ldk_node::{Builder, Config, LogLevel};
 
 use ldk_node::lightning::ln::msgs::SocketAddress;
@@ -120,7 +121,8 @@ fn main() {
 	std::thread::sleep(Duration::from_secs(10));
 	let count_node = Arc::clone(&node);
 	std::thread::spawn(move || loop {
-		let (num_om_support, num_nodes) = count_node.network_onion_message_support();
+		let (num_om_support, num_nodes) =
+			network_onion_message_support(&count_node.network_graph());
 		let share_pct = num_om_support as f32 / num_nodes as f32 * 100.0;
 		println!(
 			"Nodes that announce OM support: {}/{} = {:.1}%",
@@ -141,6 +143,28 @@ fn main() {
 
 	pause();
 	node.stop().unwrap();
+}
+
+fn network_onion_message_support(network_graph: &NetworkGraph) -> (usize, usize) {
+	let num_nodes = network_graph
+		.list_nodes()
+		.iter()
+		.filter(|n| network_graph.node(n).map_or(false, |n| n.announcement_info.is_some()))
+		.count();
+	let num_support_oms = network_graph
+		.list_nodes()
+		.iter()
+		.filter(|n| {
+			network_graph.node(n).map_or(false, |n| {
+				n.announcement_info
+					.as_ref()
+					.map_or(false, |info| info.features.supports_onion_messages())
+			})
+		})
+		.count();
+
+	debug_assert!(num_support_oms <= num_nodes);
+	(num_support_oms, num_nodes)
 }
 
 fn pause() {
