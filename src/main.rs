@@ -5,8 +5,9 @@ use std::sync::Arc;
 use std::time::{Duration, SystemTime};
 
 use chrono::{DateTime, Utc};
+use ldk_node::config::Config;
 use ldk_node::graph::NetworkGraph;
-use ldk_node::{Builder, Config, LogLevel};
+use ldk_node::{Builder, LogLevel};
 
 use ldk_node::lightning::ln::msgs::SocketAddress;
 
@@ -158,7 +159,7 @@ fn network_onion_message_support(network_graph: &NetworkGraph) -> (usize, usize)
 			network_graph.node(n).map_or(false, |n| {
 				n.announcement_info
 					.as_ref()
-					.map_or(false, |info| info.features.supports_onion_messages())
+					.map_or(false, |info| info.features().supports_onion_messages())
 			})
 		})
 		.count();
