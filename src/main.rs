@@ -5,9 +5,10 @@ use std::sync::Arc;
 use std::time::{Duration, SystemTime};
 
 use chrono::{DateTime, Utc};
-use ldk_node::config::Config;
+use ldk_node::config::{Config, EsploraSyncConfig};
 use ldk_node::graph::NetworkGraph;
-use ldk_node::{Builder, LogLevel};
+use ldk_node::logger::LogLevel;
+use ldk_node::Builder;
 
 use ldk_node::lightning::ln::msgs::SocketAddress;
 
@@ -22,7 +23,9 @@ fn main() {
 
 	let mut builder = Builder::from_config(config);
 	builder.set_storage_dir_path("/home/tnull/ldk_node_om_support_storage/".to_string());
-	builder.set_log_level(LogLevel::Debug);
+	builder.set_filesystem_logger(None, Some(LogLevel::Debug));
+	let sync_config = EsploraSyncConfig { background_sync_config: None };
+	builder.set_chain_source_esplora("https://mempool.space/api".to_string(), Some(sync_config));
 
 	let node = Arc::new(builder.build().unwrap());
 	node.start().unwrap();
@@ -30,7 +33,7 @@ fn main() {
 	let event_node = Arc::clone(&node);
 	std::thread::spawn(move || loop {
 		event_node.wait_next_event();
-		event_node.event_handled();
+		let _ = event_node.event_handled();
 	});
 
 	println!("Node ID: {}", node.node_id());
